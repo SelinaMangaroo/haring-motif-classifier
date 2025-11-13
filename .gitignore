@@ -1,0 +1,28 @@
+# Virtual environment
+.venv/
+
+# Environment config
+.env
+
+# Logs
+logs/
+*.log
+
+# Data files
+data/*.csv
+data/train/
+data/val/
+data/*.json
+
+# Prediction images
+prediction-images/
+
+predictions_*.json
+training_loss_curve.png
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS junk
+.DS_Store

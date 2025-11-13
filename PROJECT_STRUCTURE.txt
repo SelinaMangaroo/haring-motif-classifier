@@ -1,0 +1,10 @@
+.
+├── 1_create_dataset.py
+├── 2_train.py
+├── 3_predict.py
+├── PROJECT_STRUCTURE.txt
+├── data
+│   ├── data.csv
+├── requirements.txt
+└── utils
+    └── logger.py
