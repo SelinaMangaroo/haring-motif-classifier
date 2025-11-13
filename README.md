@@ -48,7 +48,7 @@ Follow these steps to set up and run the project locally.
 
 ### 1 Clone the Repository
 ```bash
-git clone https://github.com/<your-username>/haring-motif-classifier.git
+git clone https://github.com/SelinaMangaroo/haring-motif-classifier.git
 cd haring-motif-classifier
 ```
 
@@ -56,7 +56,6 @@ cd haring-motif-classifier
 ```bash
 python -m venv .venv
 source .venv/bin/activate   # macOS/Linux
-.venv\Scripts\activate      # Windows
 ```
 
 ### 3 Install Dependencies
@@ -65,8 +64,8 @@ pip install -r requirements.txt
 ```
 
 ### 4 Prepare the `.env` File
-Copy and adjust environment variables as needed:
-Add and edit `.env` to match your paths and settings (see configuration below).
+Add and edit a `.env` file to match your paths and settings (see configuration below).
+Copy and adjust environment variables as needed.
 
 ### 5 Add Dataset CSV
 Place your labeled CSV (e.g. `*-data.csv`) inside the `data/` directory.
@@ -180,7 +179,6 @@ Using device: cuda
 ## 👩‍💻 Author
 **Selina Mangaroo**  
 Software Engineer 
-[GitHub](https://github.com/SelinaMangaroo) • [Medium](https://medium.com/@selinamangaroo) • [Website](https://www.selinamangaroo.com/) 
-
+<a href="https://github.com/SelinaMangaroo" target="_blank">GitHub</a> • <a href="https://medium.com/@selinamangaroo" target="_blank">Medium</a> • <a href="https://www.selinamangaroo.com/" target="_blank">Website</a> • <a href="https://www.linkedin.com/in/selinamangaroo/" target="_blank">Linkedin</a>
 ---
 
