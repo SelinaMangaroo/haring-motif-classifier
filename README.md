@@ -150,6 +150,22 @@ THRESHOLD=0.5
 PREDICTION_PATH=prediction-images
 ```
 
+| **Category**   | **Variable**      | **Description**                                                             | **Example / Default Value**         |
+| -------------- | ----------------- | --------------------------------------------------------------------------- | ----------------------------------- |
+| **Dataset**    | `CSV_PATH`        | Path to the input CSV file containing metadata and image URLs.              | `data/haring-data.csv`              |
+|                | `DATA_DIR`        | Root directory where dataset folders (train/val) and labels will be stored. | `data`                              |
+|                | `TRAIN_SPLIT`     | Percentage of data to use for training (remainder used for validation).     | `0.8`                               |
+|                | `IMAGE_COLUMN`    | Column name in CSV containing image URLs.                                   | `Medium resolution media`           |
+|                | `MOTIF_COLUMN`    | Column name in CSV containing motif labels.                                 | `Motifs`                            |
+| **Training**   | `BATCH_SIZE`      | Number of images per training batch.                                        | `16`                                |
+|                | `EPOCHS`          | Number of epochs (full passes through the dataset).                         | `6`                                 |
+|                | `LEARNING_RATE`   | Learning rate for optimizer — smaller = slower but more stable.             | `0.0001`                            |
+|                | `MODEL_PATH`      | Path where the trained model will be saved.                                 | `haring_resnet18_model.pth`         |
+| **Prediction** | `THRESHOLD`       | Confidence threshold (0–1) for including a motif in predictions.            | `0.5`                               |
+|                | `PREDICTION_PATH` | Path to image or folder for running predictions.                            | `prediction-imgs/15098_small.jpg`   |
+| **Logging**    | `LOG_DIR`         | Directory where log files will be stored.                                   | `logs`                              |
+
+
 You can adjust these values to control training speed, dataset location, or prediction thresholds.
 
 ---
@@ -178,7 +194,9 @@ Using device: cuda
 
 ## 👩‍💻 Author
 **Selina Mangaroo**  
+
 Software Engineer 
+
 <a href="https://github.com/SelinaMangaroo" target="_blank">GitHub</a> • <a href="https://medium.com/@selinamangaroo" target="_blank">Medium</a> • <a href="https://www.selinamangaroo.com/" target="_blank">Website</a> • <a href="https://www.linkedin.com/in/selinamangaroo/" target="_blank">Linkedin</a>
 ---
 
