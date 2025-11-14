@@ -193,9 +193,7 @@ Using device: cuda
 ---
 
 ## 👩‍💻 Author
-**Selina Mangaroo**  
-
-Software Engineer 
+**Selina Mangaroo** • Software Engineer 
 
 <a href="https://github.com/SelinaMangaroo" target="_blank">GitHub</a> • <a href="https://medium.com/@selinamangaroo" target="_blank">Medium</a> • <a href="https://www.selinamangaroo.com/" target="_blank">Website</a> • <a href="https://www.linkedin.com/in/selinamangaroo/" target="_blank">Linkedin</a>
 ---
