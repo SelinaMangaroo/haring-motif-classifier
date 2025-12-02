@@ -25,17 +25,39 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 logger.info(f"Using device: {DEVICE}")
 logger.info(f"DATA_DIR={DATA_DIR}, BATCH_SIZE={BATCH_SIZE}, EPOCHS={EPOCHS}, LR={LEARNING_RATE}")
 
-# === LOAD LABEL FILES ===
-# Load train and validation label mappings created earlier by create_dataset.py
-try:
-    with open(os.path.join(DATA_DIR, "train_labels.json")) as f:
-        train_labels = json.load(f)
-    with open(os.path.join(DATA_DIR, "val_labels.json")) as f:
-        val_labels = json.load(f)
-    logger.info("Successfully loaded label mappings.")
-except Exception as e:
-    logger.error(f"Error loading label JSONs: {e}")
-    raise SystemExit(e)
+# # === LOAD LABEL FILES ===
+# # Load train and validation label mappings created earlier by create_dataset.py
+# try:
+#     with open(os.path.join(DATA_DIR, "train_labels.json")) as f:
+#         train_labels = json.load(f)
+#     with open(os.path.join(DATA_DIR, "val_labels.json")) as f:
+#         val_labels = json.load(f)
+#     logger.info("Successfully loaded label mappings.")
+# except Exception as e:
+#     logger.error(f"Error loading label JSONs: {e}")
+#     raise SystemExit(e)
+
+
+# === LOAD ALL LABEL FILES ===
+def load_all_labels(prefix):
+    """Load and merge all JSON label files matching the prefix (train or val)."""
+    all_labels = {}
+    for fname in os.listdir(DATA_DIR):
+        if fname.startswith(prefix) and fname.endswith(".json"):
+            path = os.path.join(DATA_DIR, fname)
+            try:
+                with open(path) as f:
+                    labels = json.load(f)
+                    all_labels.update(labels)
+                logger.info(f"Loaded {len(labels)} entries from {fname}")
+            except Exception as e:
+                logger.warning(f"Skipping {fname}: {e}")
+    return all_labels
+
+train_labels = load_all_labels("train_labels")
+val_labels = load_all_labels("val_labels")
+
+logger.info(f"Total combined: {len(train_labels)} train / {len(val_labels)} val samples.")
 
 # === PREPARE MOTIF LIST ===
 # Extract all unique motifs from both train and validation sets for consistent indexing
