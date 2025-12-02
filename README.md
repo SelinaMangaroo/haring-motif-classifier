@@ -135,7 +135,7 @@ All scripts will automatically generate logs, models, and output JSONs in timest
   }
   ```
 
-### 4. Motif Analysis (0_analyze_motifs.py)
+### 4. Motif Analysis (`0_analyze_motifs.py`)
 - Loads any CSV or Excel file and counts motif frequencies.
 - Detects rare or over-represented motifs (outlier detection).
 Generates:
@@ -170,7 +170,7 @@ PREDICTION_PATH=prediction-images
 SAVE_PREDICTIONS_PATH=prediction_results
 
 # === MOTIF ANALYSIS CONFIGURATION ===
-ANALYSIS_FILE=data/haring_csv_data/export_set__ML_set_1_NEW_.csv
+ANALYSIS_FILE=data/haring_csv_data/export_set.csv
 MOTIF_COLUMN=Motifs
 REPORTS_DIR=motif_analysis_reports
 ```
