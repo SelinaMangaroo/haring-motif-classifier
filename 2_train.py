@@ -25,19 +25,6 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 logger.info(f"Using device: {DEVICE}")
 logger.info(f"DATA_DIR={DATA_DIR}, BATCH_SIZE={BATCH_SIZE}, EPOCHS={EPOCHS}, LR={LEARNING_RATE}")
 
-# # === LOAD LABEL FILES ===
-# # Load train and validation label mappings created earlier by create_dataset.py
-# try:
-#     with open(os.path.join(DATA_DIR, "train_labels.json")) as f:
-#         train_labels = json.load(f)
-#     with open(os.path.join(DATA_DIR, "val_labels.json")) as f:
-#         val_labels = json.load(f)
-#     logger.info("Successfully loaded label mappings.")
-# except Exception as e:
-#     logger.error(f"Error loading label JSONs: {e}")
-#     raise SystemExit(e)
-
-
 # === LOAD ALL LABEL FILES ===
 def load_all_labels(prefix):
     """Load and merge all JSON label files matching the prefix (train or val)."""
@@ -114,13 +101,30 @@ class HaringDataset(Dataset):
 
 # === IMAGE TRANSFORMS ===
 # Augmentation adds variety and prevents overfitting; normalization matches ResNet training stats
+# train_transforms = transforms.Compose([
+#     transforms.Resize((224,224)), # Resize to 224×224 (ResNet input size)
+#     transforms.RandomHorizontalFlip(), # Randomly flip horizontally
+#     transforms.RandomRotation(10), # Random rotation 10 degrees
+#     transforms.ToTensor(), # Convert image to PyTorch tensor
+#     transforms.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225]) # Normalize using ImageNet mean/std
+# ])
+
 train_transforms = transforms.Compose([
-    transforms.Resize((224,224)), # Resize to 224×224 (ResNet input size)
-    transforms.RandomHorizontalFlip(), # Randomly flip horizontally
-    transforms.RandomRotation(10), # Random rotation 10 degrees
-    transforms.ToTensor(), # Convert image to PyTorch tensor
-    transforms.Normalize([0.485,0.456,0.406],[0.229,0.224,0.225]) # Normalize using ImageNet mean/std
+    transforms.Resize((224, 224)),
+    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.02),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomRotation(degrees=15),
+    transforms.RandomResizedCrop(224, scale=(0.8, 1.0)),
+    transforms.RandomAffine(
+        degrees=0,
+        translate=(0.05, 0.05),   # small shifts
+        shear=5                   # small perspective skew
+    ),
+    transforms.ToTensor(),
+    transforms.Normalize([0.485, 0.456, 0.406],
+                        [0.229, 0.224, 0.225])
 ])
+
 val_transforms = transforms.Compose([
     transforms.Resize((224,224)),
     transforms.ToTensor(),
@@ -142,9 +146,16 @@ logger.info(f"Training samples: {len(train_dataset)}, Validation samples: {len(v
 logger.info("Loading pretrained ResNet18 model...")
 model = models.resnet18(weights=models.ResNet18_Weights.IMAGENET1K_V1)
 
-# Freeze all earlier layers to keep pretrained visual features intact
-for p in model.parameters():
-    p.requires_grad = False 
+# # Freeze all earlier layers to keep pretrained visual features intact
+# for p in model.parameters():
+#     p.requires_grad = False 
+
+for name, param in model.named_parameters():
+    # Unfreeze the final convolution block and fully connected layer
+    if "layer4" in name or "fc" in name:
+        param.requires_grad = True
+    else:
+        param.requires_grad = False
 
 # Replace final fully connected layer with new output layer for motifs
 model.fc = nn.Linear(model.fc.in_features, len(all_motifs))
@@ -153,7 +164,11 @@ model = model.to(DEVICE) # move model to GPU if available
 # Define loss and optimizer
 # BCEWithLogitsLoss = Binary Cross Entropy + Sigmoid (best for multi-label)
 criterion = nn.BCEWithLogitsLoss()
-optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
+# optimizer = optim.Adam(model.fc.parameters(), lr=LEARNING_RATE)
+optimizer = optim.Adam([
+    {'params': model.layer4.parameters(), 'lr': 1e-5},
+    {'params': model.fc.parameters(), 'lr': 1e-4}
+])
 
 # === TRAINING LOOP ===
 train_losses, val_losses = [], []
@@ -197,7 +212,8 @@ model_path = os.getenv("MODEL_PATH", "haring_resnet18_model.pth")
 torch.save({
     "model_state_dict": model.state_dict(),
     "motif_to_idx": motif_to_idx
-}, "haring_resnet18_model.pth")
+}, model_path)
+
 logger.info(f"Model saved to {model_path}")
 
 # === PLOT LOSSES ===

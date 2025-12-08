@@ -6,7 +6,6 @@ from openpyxl import Workbook
 from openpyxl.drawing.image import Image as XLImage
 from openpyxl.styles import Font, Alignment
 from tqdm import tqdm
-
 from utils.logger import get_logger
 
 # === LOAD ENVIRONMENT CONFIG ===
